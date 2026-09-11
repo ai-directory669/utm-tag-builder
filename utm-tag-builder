@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM Tag Builder — Free Campaign URL Generator</title>
+<meta name="description" content="Build clean, trackable UTM campaign URLs in seconds. Free, no sign-up, works entirely in your browser. Save your last links and copy them instantly.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEAE0;
+    --paper-raised:#F7F4EC;
+    --ink:#1C2320;
+    --ink-soft:#5B5F57;
+    --line:#C9C2B0;
+    --stamp:#B23A2E;
+    --stamp-dark:#8E2C22;
+    --ok:#3D6B4C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:64px 24px 80px;
+  }
+  header{
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--stamp);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;height:7px;
+    background:var(--stamp);
+    border-radius:50%;
+    display:inline-block;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:500;
+    font-size:clamp(32px,5vw,44px);
+    line-height:1.12;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    max-width:46ch;
+    color:var(--ink-soft);
+    font-size:15.5px;
+    margin:0;
+  }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:28px;
+    margin-bottom:28px;
+  }
+
+  .field{
+    margin-bottom:18px;
+  }
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:13px;
+    font-weight:500;
+    margin-bottom:6px;
+  }
+  .field label .req{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    font-weight:400;
+  }
+  .field input{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:#fff;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    color:var(--ink);
+  }
+  .field input:focus{
+    outline:none;
+    border-color:var(--stamp);
+    box-shadow:0 0 0 3px rgba(178,58,46,0.12);
+  }
+  .field .hint{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:5px;
+  }
+
+  .row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:480px){
+    .row{grid-template-columns:1fr;}
+  }
+
+  .optional-toggle{
+    background:none;
+    border:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    padding:4px 0;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .optional-fields{
+    display:none;
+    margin-top:18px;
+    padding-top:18px;
+    border-top:1px dashed var(--line);
+  }
+  .optional-fields.open{display:block;}
+
+  /* --- tag / label output --- */
+  .tag{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:24px 24px 20px;
+  }
+  .tag::before,.tag::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    height:0;
+    border-top:1.5px dashed var(--line);
+  }
+  .tag::before{top:0;}
+  .tag::after{bottom:0;}
+  .tag-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+    margin-bottom:10px;
+  }
+  .tag-url{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;
+    line-height:1.6;
+    word-break:break-all;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:14px;
+    margin-bottom:14px;
+    min-height:24px;
+  }
+  .tag-url .base{color:var(--ink);}
+  .tag-url .param-key{color:var(--stamp-dark);}
+  .tag-url .param-val{color:var(--ink);}
+  .tag-url .sep{color:var(--ink-soft);}
+  .tag-url.empty{color:var(--ink-soft); font-style:italic;}
+
+  .actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  button.copy{
+    background:var(--stamp);
+    color:#fff;
+    border:none;
+    border-radius:2px;
+    padding:10px 18px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  button.copy:hover{background:var(--stamp-dark);}
+  button.copy:disabled{background:var(--line); cursor:not-allowed;}
+  .copied-msg{
+    font-size:12.5px;
+    color:var(--ok);
+    font-family:'IBM Plex Mono',monospace;
+    opacity:0;
+    transition:opacity 0.2s ease;
+  }
+  .copied-msg.show{opacity:1;}
+
+  /* --- history --- */
+  .history{
+    margin-top:8px;
+  }
+  .history h2{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+    text-transform:none;
+  }
+  .history-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .history-item:last-child{border-bottom:none;}
+  .history-item .hurl{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    word-break:break-all;
+    flex:1;
+  }
+  .history-item button{
+    flex-shrink:0;
+    background:none;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:5px 10px;
+    font-size:11.5px;
+    font-family:'IBM Plex Mono',monospace;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .history-item button:hover{border-color:var(--stamp);}
+  .history-empty{
+    color:var(--ink-soft);
+    font-size:13px;
+    font-style:italic;
+  }
+
+  footer{
+    margin-top:48px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  footer p{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0;
+    max-width:32ch;
+  }
+  .coffee-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--ink);
+    color:#fff !important;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:2px;
+    font-size:13.5px;
+    font-weight:500;
+    font-family:'Inter',sans-serif;
+    white-space:nowrap;
+    transition:background 0.15s ease;
+  }
+  .coffee-btn:hover{background:#000;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">FREE &middot; NO SIGN-UP &middot; RUNS IN YOUR BROWSER</div>
+    <h1>Tag every link before you ship it.</h1>
+    <p>Build a clean UTM campaign URL, copy it, and move on. Nothing is uploaded anywhere — this page works entirely on your device.</p>
+  </header>
+
+  <div class="card">
+    <div class="field">
+      <label for="url">Destination URL <span class="req">required</span></label>
+      <input type="text" id="url" placeholder="https://yoursite.com/landing-page">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="source">Campaign source <span class="req">required</span></label>
+        <input type="text" id="source" placeholder="newsletter, twitter, google">
+      </div>
+      <div class="field">
+        <label for="medium">Campaign medium <span class="req">required</span></label>
+        <input type="text" id="medium" placeholder="email, social, cpc">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="campaign">Campaign name <span class="req">required</span></label>
+      <input type="text" id="campaign" placeholder="spring_launch, black_friday">
+    </div>
+
+    <button class="optional-toggle" id="toggleOptional" type="button">+ Add term &amp; content (optional)</button>
+
+    <div class="optional-fields" id="optionalFields">
+      <div class="row">
+        <div class="field">
+          <label for="term">Campaign term</label>
+          <input type="text" id="term" placeholder="running+shoes">
+          <div class="hint">Used for paid search keywords</div>
+        </div>
+        <div class="field">
+          <label for="content">Campaign content</label>
+          <input type="text" id="content" placeholder="top_banner, sidebar_ad">
+          <div class="hint">Differentiate similar links/ads</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tag">
+    <div class="tag-label">YOUR TAGGED URL</div>
+    <div class="tag-url empty" id="output">Fill in the fields above to generate your link</div>
+    <div class="actions">
+      <button class="copy" id="copyBtn" disabled>Copy link</button>
+      <span class="copied-msg" id="copiedMsg">Copied to clipboard</span>
+    </div>
+  </div>
+
+  <div class="card history" style="margin-top:28px;">
+    <h2>Recent links</h2>
+    <div id="historyList"><div class="history-empty">Links you generate will be saved here on this device.</div></div>
+  </div>
+
+  <footer>
+    <p>Built as a small free tool. If it saved you time, a coffee is always appreciated.</p>
+    <a class="coffee-btn" href="https://buymeacoffee.com/aiforwork" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const urlEl = $('url'), sourceEl = $('source'), mediumEl = $('medium'),
+        campaignEl = $('campaign'), termEl = $('term'), contentEl = $('content');
+  const output = $('output'), copyBtn = $('copyBtn'), copiedMsg = $('copiedMsg');
+  const historyList = $('historyList');
+  const STORAGE_KEY = 'utm_tag_builder_history';
+
+  $('toggleOptional').addEventListener('click', function(){
+    const el = $('optionalFields');
+    const isOpen = el.classList.toggle('open');
+    this.textContent = isOpen ? '− Hide term & content' : '+ Add term & content (optional)';
+  });
+
+  function buildUrl(){
+    const base = urlEl.value.trim();
+    const params = [
+      ['utm_source', sourceEl.value.trim()],
+      ['utm_medium', mediumEl.value.trim()],
+      ['utm_campaign', campaignEl.value.trim()],
+      ['utm_term', termEl.value.trim()],
+      ['utm_content', contentEl.value.trim()]
+    ].filter(p => p[1].length > 0);
+
+    if(!base || params.length === 0) return null;
+
+    let separator = base.includes('?') ? '&' : '?';
+    let full = base;
+    const parts = [];
+    params.forEach(([k,v]) => {
+      parts.push(k + '=' + encodeURIComponent(v));
+    });
+    full += separator + parts.join('&');
+    return { full, base, params };
+  }
+
+  function render(){
+    const result = buildUrl();
+    if(!result){
+      output.textContent = 'Fill in the fields above to generate your link';
+      output.classList.add('empty');
+      copyBtn.disabled = true;
+      return;
+    }
+    output.classList.remove('empty');
+    let html = '<span class="base">' + escapeHtml(result.base) + '</span>';
+    result.params.forEach((p, i) => {
+      html += '<span class="sep">' + (i === 0 ? '?' : '&amp;') + '</span>';
+      html += '<span class="param-key">' + escapeHtml(p[0]) + '</span>';
+      html += '<span class="sep">=</span>';
+      html += '<span class="param-val">' + escapeHtml(encodeURIComponent(p[1])) + '</span>';
+    });
+    output.innerHTML = html;
+    copyBtn.disabled = false;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  [urlEl, sourceEl, mediumEl, campaignEl, termEl, contentEl].forEach(el=>{
+    el.addEventListener('input', render);
+  });
+
+  copyBtn.addEventListener('click', function(){
+    const result = buildUrl();
+    if(!result) return;
+    navigator.clipboard.writeText(result.full).then(()=>{
+      copiedMsg.classList.add('show');
+      setTimeout(()=> copiedMsg.classList.remove('show'), 1800);
+      saveToHistory(result.full);
+    });
+  });
+
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+
+  function saveToHistory(url){
+    let hist = loadHistory();
+    hist = hist.filter(u => u !== url);
+    hist.unshift(url);
+    hist = hist.slice(0, 5);
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(hist)); }catch(e){}
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const hist = loadHistory();
+    if(hist.length === 0){
+      historyList.innerHTML = '<div class="history-empty">Links you generate will be saved here on this device.</div>';
+      return;
+    }
+    historyList.innerHTML = hist.map(u => {
+      const safe = escapeHtml(u);
+      return '<div class="history-item"><div class="hurl">' + safe + '</div>' +
+             '<button onclick="navigator.clipboard.writeText(this.parentElement.querySelector(\'.hurl\').textContent)">Copy</button></div>';
+    }).join('');
+  }
+
+  render();
+  renderHistory();
+})();
+</script>
+
+</body>
+</html>
+# UTM Tag Builder
+
+A free, no-sign-up UTM campaign URL builder. Runs entirely in the browser — nothing is sent to a server.
+
+**Live demo:** _(add your GitHub Pages link here once deployed)_
+
+## Features
+- Build UTM-tagged URLs (source, medium, campaign, term, content)
+- Live preview with syntax highlighting
+- One-click copy
+- Saves your last 5 links locally (on your device only — no account, no database)
+- Support link: [Buy me a coffee](https://buymeacoffee.com/aiforwork)
+
+## Tech
+Plain HTML/CSS/JS. No build step, no dependencies, no backend.
+
+## Deploying on GitHub Pages
+1. Push this repo to GitHub.
+2. Go to **Settings → Pages**.
+3. Under "Build and deployment," set **Source: Deploy from a branch**.
+4. Branch: `main`, folder: `/ (root)`. Save.
+5. Your site will be live at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
+
+## License
+MIT — free to use, modify, and redistribute.
