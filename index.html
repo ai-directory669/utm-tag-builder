@@ -3,385 +3,999 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>UTM Tag Builder — Free Campaign URL Generator</title>
-<meta name="description" content="Build clean, trackable UTM campaign URLs in seconds. Free, no sign-up, works entirely in your browser. Save your last links and copy them instantly.">
+
+<meta name="description" content="Build clean, trackable UTM campaign URLs in seconds. Free, no sign-up and works entirely in your browser.">
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --paper:#EFEAE0;
-    --paper-raised:#F7F4EC;
-    --ink:#1C2320;
-    --ink-soft:#5B5F57;
-    --line:#C9C2B0;
-    --stamp:#B23A2E;
-    --stamp-dark:#8E2C22;
-    --ok:#3D6B4C;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
+:root{
+  --bg:#f6f8fc;
+  --surface:#ffffff;
+  --surface-soft:#f8faff;
+  --text:#172033;
+  --muted:#667085;
+  --line:#e4e8f0;
+  --primary:#5b5bd6;
+  --primary-dark:#4646b8;
+  --primary-soft:#eeeeff;
+  --success:#16845b;
+  --shadow:0 12px 35px rgba(31,41,75,.08);
+  --shadow-soft:0 5px 18px rgba(31,41,75,.05);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(91,91,214,.08), transparent 28%),
+    radial-gradient(circle at 90% 5%, rgba(123,92,220,.07), transparent 25%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  width:min(940px, calc(100% - 32px));
+  margin:0 auto;
+  padding:42px 0 70px;
+}
+
+/* HEADER */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:52px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+  text-decoration:none;
+}
+
+.brand-icon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:linear-gradient(135deg,#6969e8,#7d5cda);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(91,91,214,.25);
+}
+
+.free-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 11px;
+  border:1px solid #dfe2ff;
+  border-radius:999px;
+  background:#f7f7ff;
+  color:var(--primary-dark);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+
+.free-badge::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#36a269;
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  max-width:720px;
+  margin:0 auto 38px;
+}
+
+.hero-kicker{
+  display:inline-block;
+  margin-bottom:15px;
+  color:var(--primary);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(36px,6vw,58px);
+  line-height:1.05;
+  letter-spacing:-.045em;
+  font-weight:800;
+}
+
+.hero h1 span{
+  background:linear-gradient(135deg,#5555cf,#835bd7);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  max-width:610px;
+  margin:18px auto 0;
+  color:var(--muted);
+  font-size:16px;
+}
+
+/* MAIN CARD */
+
+.card{
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+.builder{
+  padding:30px;
+}
+
+.section-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  margin-bottom:26px;
+}
+
+.section-heading h2{
+  margin:0 0 5px;
+  font-size:20px;
+  letter-spacing:-.02em;
+}
+
+.section-heading p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* FIELDS */
+
+.field{
+  margin-bottom:20px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.field label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.req{
+  color:#8a93a5;
+  font-size:10px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.field input{
+  width:100%;
+  height:47px;
+  padding:0 14px;
+  border:1px solid #dfe3eb;
+  border-radius:10px;
+  outline:none;
+  background:#fff;
+  color:var(--text);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:13px;
+  transition:.18s ease;
+}
+
+.field input::placeholder{
+  color:#a3aaba;
+}
+
+.field input:hover{
+  border-color:#c8ceda;
+}
+
+.field input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(91,91,214,.10);
+}
+
+.optional-toggle{
+  width:100%;
+  padding:13px 14px;
+  border:1px dashed #cfd4df;
+  border-radius:10px;
+  background:#fafbfe;
+  color:var(--primary-dark);
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  text-align:left;
+  transition:.18s ease;
+}
+
+.optional-toggle:hover{
+  background:var(--primary-soft);
+  border-color:#b8b9ed;
+}
+
+.optional-fields{
+  display:none;
+  margin-top:18px;
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fafbfe;
+}
+
+.optional-fields.open{
+  display:block;
+}
+
+.hint{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* OUTPUT */
+
+.output-card{
+  margin-top:22px;
+  padding:26px;
+  background:linear-gradient(145deg,#191d35,#252b4c);
+  border-radius:18px;
+  color:#fff;
+  box-shadow:0 14px 35px rgba(24,29,53,.18);
+}
+
+.output-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:13px;
+}
+
+.output-label{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#bfc5e8;
+}
+
+.live-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  color:#aeb5d6;
+}
+
+.live-status::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#5ee0a1;
+}
+
+.tag-url{
+  min-height:66px;
+  padding:15px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;
+  background:rgba(255,255,255,.06);
+  color:#eef0ff;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:12px;
+  line-height:1.7;
+  word-break:break-all;
+}
+
+.tag-url.empty{
+  color:#8e96b6;
+  font-style:italic;
+}
+
+.tag-url .base{
+  color:#fff;
+}
+
+.tag-url .param-key{
+  color:#a99cff;
+}
+
+.tag-url .param-val{
+  color:#9ee7c4;
+}
+
+.tag-url .sep{
+  color:#9da5c4;
+}
+
+.actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:15px;
+}
+
+button.copy{
+  border:0;
+  border-radius:9px;
+  padding:11px 17px;
+  background:#fff;
+  color:#202541;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+button.copy:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+
+button.copy:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.copied-msg{
+  color:#82e5b1;
+  font-size:12px;
+  opacity:0;
+  transition:.2s ease;
+}
+
+.copied-msg.show{
+  opacity:1;
+}
+
+/* INFO */
+
+.info-section{
+  margin-top:45px;
+}
+
+.info-section h2{
+  margin:0 0 8px;
+  text-align:center;
+  font-size:24px;
+  letter-spacing:-.03em;
+}
+
+.info-intro{
+  max-width:600px;
+  margin:0 auto 22px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.info-box{
+  padding:21px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow-soft);
+}
+
+.info-number{
+  display:inline-grid;
+  place-items:center;
+  width:29px;
+  height:29px;
+  margin-bottom:12px;
+  border-radius:8px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  font-size:11px;
+  font-weight:800;
+}
+
+.info-box h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.info-box p{
+  margin:0;
+  color:var(--muted);
+  font-size:12.5px;
+}
+
+/* HISTORY */
+
+.history{
+  margin-top:22px;
+  padding:25px 28px;
+}
+
+.history h2{
+  margin:0 0 14px;
+  font-size:17px;
+}
+
+.history-empty{
+  color:var(--muted);
+  font-size:12.5px;
+}
+
+.history-item{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.history-item:last-child{
+  border-bottom:0;
+}
+
+.hurl{
+  flex:1;
+  min-width:0;
+  color:var(--muted);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:11px;
+  word-break:break-all;
+}
+
+.history-item button{
+  flex-shrink:0;
+  border:1px solid #d9deea;
+  border-radius:8px;
+  background:#fff;
+  padding:7px 11px;
+  color:var(--text);
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.history-item button:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+}
+
+/* FAQ */
+
+.faq{
+  margin-top:45px;
+}
+
+.faq h2{
+  margin:0 0 20px;
+  text-align:center;
+  font-size:24px;
+  letter-spacing:-.03em;
+}
+
+details{
+  margin-bottom:10px;
+  padding:17px 19px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:11px;
+}
+
+summary{
+  cursor:pointer;
+  font-size:13.5px;
+  font-weight:700;
+}
+
+details p{
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* FOOTER */
+
+footer{
+  margin-top:50px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+}
+
+footer p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.coffee-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 15px;
+  border-radius:9px;
+  background:#172033;
+  color:#fff !important;
+  text-decoration:none;
+  font-size:12.5px;
+  font-weight:700;
+  white-space:nowrap;
+  transition:.18s ease;
+}
+
+.coffee-btn:hover{
+  background:#000;
+  transform:translateY(-1px);
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
   .wrap{
-    max-width:640px;
-    margin:0 auto;
-    padding:64px 24px 80px;
-  }
-  header{
-    margin-bottom:40px;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-    letter-spacing:0.02em;
-    color:var(--stamp);
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-bottom:18px;
-  }
-  .eyebrow::before{
-    content:"";
-    width:7px;height:7px;
-    background:var(--stamp);
-    border-radius:50%;
-    display:inline-block;
-  }
-  h1{
-    font-family:'Fraunces',serif;
-    font-optical-sizing:auto;
-    font-weight:500;
-    font-size:clamp(32px,5vw,44px);
-    line-height:1.12;
-    margin:0 0 14px;
-    letter-spacing:-0.01em;
-  }
-  header p{
-    max-width:46ch;
-    color:var(--ink-soft);
-    font-size:15.5px;
-    margin:0;
+    width:min(100% - 22px, 940px);
+    padding-top:24px;
   }
 
-  .card{
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:28px;
+  .topbar{
+    margin-bottom:38px;
+  }
+
+  .free-badge{
+    display:none;
+  }
+
+  .hero{
     margin-bottom:28px;
   }
 
-  .field{
-    margin-bottom:18px;
+  h1{
+    font-size:39px;
   }
-  .field:last-child{margin-bottom:0;}
-  .field label{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    font-size:13px;
-    font-weight:500;
-    margin-bottom:6px;
-  }
-  .field label .req{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10.5px;
-    color:var(--ink-soft);
-    font-weight:400;
-  }
-  .field input{
-    width:100%;
-    padding:11px 12px;
-    border:1px solid var(--line);
-    border-radius:2px;
-    background:#fff;
-    font-family:'IBM Plex Mono',monospace;
+
+  .hero p{
     font-size:14px;
-    color:var(--ink);
   }
-  .field input:focus{
-    outline:none;
-    border-color:var(--stamp);
-    box-shadow:0 0 0 3px rgba(178,58,46,0.12);
-  }
-  .field .hint{
-    font-size:12px;
-    color:var(--ink-soft);
-    margin-top:5px;
+
+  .builder{
+    padding:20px;
   }
 
   .row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
-  }
-  @media (max-width:480px){
-    .row{grid-template-columns:1fr;}
+    grid-template-columns:1fr;
+    gap:0;
   }
 
-  .optional-toggle{
-    background:none;
-    border:none;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    cursor:pointer;
-    padding:4px 0;
-    text-decoration:underline;
-    text-underline-offset:3px;
+  .output-card{
+    padding:20px;
   }
-  .optional-fields{
-    display:none;
-    margin-top:18px;
-    padding-top:18px;
-    border-top:1px dashed var(--line);
-  }
-  .optional-fields.open{display:block;}
 
-  /* --- tag / label output --- */
-  .tag{
-    position:relative;
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:24px 24px 20px;
+  .info-grid{
+    grid-template-columns:1fr;
   }
-  .tag::before,.tag::after{
-    content:"";
-    position:absolute;
-    left:0; right:0;
-    height:0;
-    border-top:1.5px dashed var(--line);
-  }
-  .tag::before{top:0;}
-  .tag::after{bottom:0;}
-  .tag-label{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11.5px;
-    color:var(--ink-soft);
-    letter-spacing:0.02em;
-    margin-bottom:10px;
-  }
-  .tag-url{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13.5px;
-    line-height:1.6;
-    word-break:break-all;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:2px;
-    padding:14px;
-    margin-bottom:14px;
-    min-height:24px;
-  }
-  .tag-url .base{color:var(--ink);}
-  .tag-url .param-key{color:var(--stamp-dark);}
-  .tag-url .param-val{color:var(--ink);}
-  .tag-url .sep{color:var(--ink-soft);}
-  .tag-url.empty{color:var(--ink-soft); font-style:italic;}
 
-  .actions{
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  button.copy{
-    background:var(--stamp);
-    color:#fff;
-    border:none;
-    border-radius:2px;
-    padding:10px 18px;
-    font-family:'Inter',sans-serif;
-    font-weight:500;
-    font-size:13.5px;
-    cursor:pointer;
-    transition:background 0.15s ease;
-  }
-  button.copy:hover{background:var(--stamp-dark);}
-  button.copy:disabled{background:var(--line); cursor:not-allowed;}
-  .copied-msg{
-    font-size:12.5px;
-    color:var(--ok);
-    font-family:'IBM Plex Mono',monospace;
-    opacity:0;
-    transition:opacity 0.2s ease;
-  }
-  .copied-msg.show{opacity:1;}
-
-  /* --- history --- */
   .history{
-    margin-top:8px;
+    padding:20px;
   }
-  .history h2{
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink-soft);
-    margin:0 0 12px;
-    text-transform:none;
-  }
+
   .history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    padding:12px 0;
-    border-bottom:1px solid var(--line);
-    font-size:13px;
-  }
-  .history-item:last-child{border-bottom:none;}
-  .history-item .hurl{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-    word-break:break-all;
-    flex:1;
-  }
-  .history-item button{
-    flex-shrink:0;
-    background:none;
-    border:1px solid var(--line);
-    border-radius:2px;
-    padding:5px 10px;
-    font-size:11.5px;
-    font-family:'IBM Plex Mono',monospace;
-    cursor:pointer;
-    color:var(--ink);
-  }
-  .history-item button:hover{border-color:var(--stamp);}
-  .history-empty{
-    color:var(--ink-soft);
-    font-size:13px;
-    font-style:italic;
+    align-items:flex-start;
   }
 
   footer{
-    margin-top:48px;
-    padding-top:24px;
-    border-top:1px solid var(--line);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:16px;
+    flex-direction:column;
+    align-items:flex-start;
   }
-  footer p{
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin:0;
-    max-width:32ch;
+}
+
+@media(max-width:420px){
+
+  h1{
+    font-size:34px;
   }
-  .coffee-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:var(--ink);
-    color:#fff !important;
-    text-decoration:none;
-    padding:10px 16px;
-    border-radius:2px;
+
+  .hero p{
     font-size:13.5px;
-    font-weight:500;
-    font-family:'Inter',sans-serif;
-    white-space:nowrap;
-    transition:background 0.15s ease;
   }
-  .coffee-btn:hover{background:#000;}
+
+  .actions{
+    flex-wrap:wrap;
+  }
+
+  button.copy{
+    width:100%;
+  }
+
+  .copied-msg{
+    width:100%;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
-  <header>
-    <div class="eyebrow">FREE &middot; NO SIGN-UP &middot; RUNS IN YOUR BROWSER</div>
-    <h1>Tag every link before you ship it.</h1>
-    <p>Build a clean UTM campaign URL, copy it, and move on. Nothing is uploaded anywhere — this page works entirely on your device.</p>
+
+  <div class="topbar">
+    <a class="brand" href="../">
+      <span class="brand-icon">🏷️</span>
+      <span>UTM Tag Builder</span>
+    </a>
+
+    <div class="free-badge">
+      FREE · NO SIGN-UP
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-kicker">Free Marketing Tool</div>
+
+    <h1>
+      Build smarter,<br>
+      <span>track every campaign.</span>
+    </h1>
+
+    <p>
+      Create clean, trackable UTM campaign URLs in seconds.
+      Everything runs directly in your browser.
+    </p>
   </header>
 
-  <div class="card">
-    <div class="field">
-      <label for="url">Destination URL <span class="req">required</span></label>
-      <input type="text" id="url" placeholder="https://yoursite.com/landing-page">
-    </div>
+  <main>
 
-    <div class="row">
-      <div class="field">
-        <label for="source">Campaign source <span class="req">required</span></label>
-        <input type="text" id="source" placeholder="newsletter, twitter, google">
+    <section class="card builder">
+
+      <div class="section-heading">
+        <div>
+          <h2>Build your UTM URL</h2>
+          <p>Add your campaign details and see the tracked link instantly.</p>
+        </div>
       </div>
+
       <div class="field">
-        <label for="medium">Campaign medium <span class="req">required</span></label>
-        <input type="text" id="medium" placeholder="email, social, cpc">
+        <label for="url">
+          Destination URL
+          <span class="req">Required</span>
+        </label>
+
+        <input
+          type="text"
+          id="url"
+          placeholder="https://yoursite.com/landing-page"
+          autocomplete="url"
+        >
       </div>
-    </div>
 
-    <div class="field">
-      <label for="campaign">Campaign name <span class="req">required</span></label>
-      <input type="text" id="campaign" placeholder="spring_launch, black_friday">
-    </div>
-
-    <button class="optional-toggle" id="toggleOptional" type="button">+ Add term &amp; content (optional)</button>
-
-    <div class="optional-fields" id="optionalFields">
       <div class="row">
+
         <div class="field">
-          <label for="term">Campaign term</label>
-          <input type="text" id="term" placeholder="running+shoes">
-          <div class="hint">Used for paid search keywords</div>
+          <label for="source">
+            Campaign source
+            <span class="req">Required</span>
+          </label>
+
+          <input
+            type="text"
+            id="source"
+            placeholder="google, facebook, newsletter"
+          >
         </div>
+
         <div class="field">
-          <label for="content">Campaign content</label>
-          <input type="text" id="content" placeholder="top_banner, sidebar_ad">
-          <div class="hint">Differentiate similar links/ads</div>
+          <label for="medium">
+            Campaign medium
+            <span class="req">Required</span>
+          </label>
+
+          <input
+            type="text"
+            id="medium"
+            placeholder="cpc, social, email"
+          >
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="campaign">
+          Campaign name
+          <span class="req">Required</span>
+        </label>
+
+        <input
+          type="text"
+          id="campaign"
+          placeholder="summer_sale, black_friday"
+        >
+      </div>
+
+      <button
+        class="optional-toggle"
+        id="toggleOptional"
+        type="button"
+      >
+        + Add term &amp; content (optional)
+      </button>
+
+      <div class="optional-fields" id="optionalFields">
+
+        <div class="row">
+
+          <div class="field">
+            <label for="term">Campaign term</label>
+
+            <input
+              type="text"
+              id="term"
+              placeholder="running-shoes"
+            >
+
+            <div class="hint">
+              Useful for paid search keywords.
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="content">Campaign content</label>
+
+            <input
+              type="text"
+              id="content"
+              placeholder="top-banner"
+            >
+
+            <div class="hint">
+              Differentiate similar ads or links.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="output-card">
+
+      <div class="output-header">
+        <div class="output-label">Your tagged URL</div>
+        <div class="live-status">Live preview</div>
+      </div>
+
+      <div
+        class="tag-url empty"
+        id="output"
+      >
+        Fill in the fields above to generate your link
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="copy"
+          id="copyBtn"
+          disabled
+        >
+          Copy URL
+        </button>
+
+        <span
+          class="copied-msg"
+          id="copiedMsg"
+        >
+          ✓ Copied to clipboard
+        </span>
+
+      </div>
+
+    </section>
+
+    <section class="card history">
+
+      <h2>Recent links</h2>
+
+      <div id="historyList">
+        <div class="history-empty">
+          Links you generate will be saved here on this device.
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="tag">
-    <div class="tag-label">YOUR TAGGED URL</div>
-    <div class="tag-url empty" id="output">Fill in the fields above to generate your link</div>
-    <div class="actions">
-      <button class="copy" id="copyBtn" disabled>Copy link</button>
-      <span class="copied-msg" id="copiedMsg">Copied to clipboard</span>
-    </div>
-  </div>
+    </section>
 
-  <div class="card history" style="margin-top:28px;">
-    <h2>Recent links</h2>
-    <div id="historyList"><div class="history-empty">Links you generate will be saved here on this device.</div></div>
-  </div>
+    <section class="info-section">
+
+      <h2>Understand UTM parameters</h2>
+
+      <p class="info-intro">
+        UTM parameters help you understand where your website traffic
+        comes from and which campaigns are working.
+      </p>
+
+      <div class="info-grid">
+
+        <div class="info-box">
+          <div class="info-number">01</div>
+          <h3>Source</h3>
+          <p>
+            Identifies where the visitor came from,
+            such as Google, Facebook or a newsletter.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <div class="info-number">02</div>
+          <h3>Medium</h3>
+          <p>
+            Identifies the marketing channel,
+            such as CPC, social, email or referral.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <div class="info-number">03</div>
+          <h3>Campaign</h3>
+          <p>
+            Identifies the specific promotion,
+            launch, sale or marketing campaign.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="faq">
+
+      <h2>Frequently asked questions</h2>
+
+      <details>
+        <summary>What is a UTM URL?</summary>
+        <p>
+          A UTM URL is a web address with tracking parameters
+          that help analytics tools identify the source, medium
+          and campaign that generated a visit.
+        </p>
+      </details>
+
+      <details>
+        <summary>How do I create a UTM link?</summary>
+        <p>
+          Enter your destination URL, campaign source,
+          medium and campaign name above. Your tracked URL
+          will be generated automatically.
+        </p>
+      </details>
+
+      <details>
+        <summary>Are UTM parameters free?</summary>
+        <p>
+          Yes. UTM parameters are simply information added
+          to a URL. Creating them does not require a paid service.
+        </p>
+      </details>
+
+      <details>
+        <summary>Can I use UTM links with Google Analytics?</summary>
+        <p>
+          Yes. Properly formatted UTM parameters can help
+          analytics platforms identify campaign traffic.
+        </p>
+      </details>
+
+      <details>
+        <summary>Is my URL data uploaded anywhere?</summary>
+        <p>
+          No. This tool is designed to run entirely in your browser.
+          Your recent links are stored locally on your device.
+        </p>
+      </details>
+
+    </section>
+
+  </main>
 
   <footer>
-    <p>Built as a small free tool. If it saved you time, a coffee is always appreciated.</p>
-    <a class="coffee-btn" href="https://buymeacoffee.com/aiforwork" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+
+    <p>
+      Free tool · No account · Runs in your browser
+    </p>
+
+    <a
+      class="coffee-btn"
+      href="https://buymeacoffee.com/aiforwork"
+      target="_blank"
+      rel="noopener"
+    >
+      ☕ Buy me a coffee
+    </a>
+
   </footer>
+
 </div>
 
 <script>
 (function(){
+
   const $ = id => document.getElementById(id);
-  const urlEl = $('url'), sourceEl = $('source'), mediumEl = $('medium'),
-        campaignEl = $('campaign'), termEl = $('term'), contentEl = $('content');
-  const output = $('output'), copyBtn = $('copyBtn'), copiedMsg = $('copiedMsg');
+
+  const urlEl = $('url');
+  const sourceEl = $('source');
+  const mediumEl = $('medium');
+  const campaignEl = $('campaign');
+  const termEl = $('term');
+  const contentEl = $('content');
+
+  const output = $('output');
+  const copyBtn = $('copyBtn');
+  const copiedMsg = $('copiedMsg');
   const historyList = $('historyList');
+
   const STORAGE_KEY = 'utm_tag_builder_history';
 
   $('toggleOptional').addEventListener('click', function(){
+
     const el = $('optionalFields');
+
     const isOpen = el.classList.toggle('open');
-    this.textContent = isOpen ? '− Hide term & content' : '+ Add term & content (optional)';
+
+    this.textContent =
+      isOpen
+      ? '− Hide term & content'
+      : '+ Add term & content (optional)';
+
   });
 
   function buildUrl(){
+
     const base = urlEl.value.trim();
+
     const params = [
       ['utm_source', sourceEl.value.trim()],
       ['utm_medium', mediumEl.value.trim()],
@@ -390,117 +1004,229 @@
       ['utm_content', contentEl.value.trim()]
     ].filter(p => p[1].length > 0);
 
-    if(!base || params.length === 0) return null;
-
-    let separator = base.includes('?') ? '&' : '?';
-    let full = base;
-    const parts = [];
-    params.forEach(([k,v]) => {
-      parts.push(k + '=' + encodeURIComponent(v));
-    });
-    full += separator + parts.join('&');
-    return { full, base, params };
-  }
-
-  function render(){
-    const result = buildUrl();
-    if(!result){
-      output.textContent = 'Fill in the fields above to generate your link';
-      output.classList.add('empty');
-      copyBtn.disabled = true;
-      return;
+    if(!base || params.length === 0){
+      return null;
     }
-    output.classList.remove('empty');
-    let html = '<span class="base">' + escapeHtml(result.base) + '</span>';
-    result.params.forEach((p, i) => {
-      html += '<span class="sep">' + (i === 0 ? '?' : '&amp;') + '</span>';
-      html += '<span class="param-key">' + escapeHtml(p[0]) + '</span>';
-      html += '<span class="sep">=</span>';
-      html += '<span class="param-val">' + escapeHtml(encodeURIComponent(p[1])) + '</span>';
+
+    const separator = base.includes('?') ? '&' : '?';
+
+    let full = base;
+
+    const parts = [];
+
+    params.forEach(([key,value]) => {
+      parts.push(
+        key + '=' + encodeURIComponent(value)
+      );
     });
-    output.innerHTML = html;
-    copyBtn.disabled = false;
+
+    full += separator + parts.join('&');
+
+    return {
+      full,
+      base,
+      params
+    };
   }
 
   function escapeHtml(str){
+
     const d = document.createElement('div');
+
     d.textContent = str;
+
     return d.innerHTML;
   }
 
-  [urlEl, sourceEl, mediumEl, campaignEl, termEl, contentEl].forEach(el=>{
-    el.addEventListener('input', render);
+  function render(){
+
+    const result = buildUrl();
+
+    if(!result){
+
+      output.textContent =
+        'Fill in the fields above to generate your link';
+
+      output.classList.add('empty');
+
+      copyBtn.disabled = true;
+
+      return;
+    }
+
+    output.classList.remove('empty');
+
+    let html =
+      '<span class="base">' +
+      escapeHtml(result.base) +
+      '</span>';
+
+    result.params.forEach((p,i)=>{
+
+      html +=
+        '<span class="sep">' +
+        (i === 0 ? '?' : '&amp;') +
+        '</span>';
+
+      html +=
+        '<span class="param-key">' +
+        escapeHtml(p[0]) +
+        '</span>';
+
+      html +=
+        '<span class="sep">=</span>';
+
+      html +=
+        '<span class="param-val">' +
+        escapeHtml(
+          encodeURIComponent(p[1])
+        ) +
+        '</span>';
+
+    });
+
+    output.innerHTML = html;
+
+    copyBtn.disabled = false;
+  }
+
+  [
+    urlEl,
+    sourceEl,
+    mediumEl,
+    campaignEl,
+    termEl,
+    contentEl
+  ].forEach(el=>{
+    el.addEventListener('input',render);
   });
 
-  copyBtn.addEventListener('click', function(){
+  copyBtn.addEventListener('click',function(){
+
     const result = buildUrl();
+
     if(!result) return;
-    navigator.clipboard.writeText(result.full).then(()=>{
-      copiedMsg.classList.add('show');
-      setTimeout(()=> copiedMsg.classList.remove('show'), 1800);
-      saveToHistory(result.full);
-    });
+
+    navigator.clipboard
+      .writeText(result.full)
+      .then(()=>{
+
+        copiedMsg.classList.add('show');
+
+        setTimeout(()=>{
+          copiedMsg.classList.remove('show');
+        },1800);
+
+        saveToHistory(result.full);
+
+      });
+
   });
 
   function loadHistory(){
+
     try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    }catch(e){ return []; }
+
+      const raw =
+        localStorage.getItem(STORAGE_KEY);
+
+      return raw
+        ? JSON.parse(raw)
+        : [];
+
+    }catch(e){
+
+      return [];
+
+    }
+
   }
 
   function saveToHistory(url){
+
     let hist = loadHistory();
+
     hist = hist.filter(u => u !== url);
+
     hist.unshift(url);
-    hist = hist.slice(0, 5);
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(hist)); }catch(e){}
+
+    hist = hist.slice(0,5);
+
+    try{
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(hist)
+      );
+
+    }catch(e){}
+
     renderHistory();
   }
 
+  function copyHistory(button){
+
+    const url =
+      button.parentElement
+        .querySelector('.hurl')
+        .textContent;
+
+    navigator.clipboard
+      .writeText(url)
+      .then(()=>{
+
+        const oldText = button.textContent;
+
+        button.textContent = 'Copied ✓';
+
+        setTimeout(()=>{
+          button.textContent = oldText;
+        },1500);
+
+      });
+
+  }
+
+  window.copyHistory = copyHistory;
+
   function renderHistory(){
+
     const hist = loadHistory();
+
     if(hist.length === 0){
-      historyList.innerHTML = '<div class="history-empty">Links you generate will be saved here on this device.</div>';
+
+      historyList.innerHTML =
+        '<div class="history-empty">' +
+        'Links you generate will be saved here on this device.' +
+        '</div>';
+
       return;
     }
-    historyList.innerHTML = hist.map(u => {
-      const safe = escapeHtml(u);
-      return '<div class="history-item"><div class="hurl">' + safe + '</div>' +
-             '<button onclick="navigator.clipboard.writeText(this.parentElement.querySelector(\'.hurl\').textContent)">Copy</button></div>';
-    }).join('');
+
+    historyList.innerHTML =
+      hist.map(u => {
+
+        const safe = escapeHtml(u);
+
+        return `
+          <div class="history-item">
+            <div class="hurl">${safe}</div>
+            <button type="button" onclick="copyHistory(this)">
+              Copy
+            </button>
+          </div>
+        `;
+
+      }).join('');
+
   }
 
   render();
+
   renderHistory();
+
 })();
 </script>
 
 </body>
 </html>
-
-# UTM Tag Builder
-
-A free, no-sign-up UTM campaign URL builder. Runs entirely in the browser — nothing is sent to a server.
-
-**Live demo:** _(add your GitHub Pages link here once deployed)_
-
-## Features
-- Build UTM-tagged URLs (source, medium, campaign, term, content)
-- Live preview with syntax highlighting
-- One-click copy
-- Saves your last 5 links locally (on your device only — no account, no database)
-- Support link: [Buy me a coffee](https://buymeacoffee.com/aiforwork)
-
-## Tech
-Plain HTML/CSS/JS. No build step, no dependencies, no backend.
-
-## Deploying on GitHub Pages
-1. Push this repo to GitHub.
-2. Go to **Settings → Pages**.
-3. Under "Build and deployment," set **Source: Deploy from a branch**.
-4. Branch: `main`, folder: `/ (root)`. Save.
-5. Your site will be live at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
-
-## License
-MIT — free to use, modify, and redistribute.
